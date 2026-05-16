@@ -11,9 +11,9 @@ MIN_SPACING = 1.7
 GAP = MIN_SPACING
 GRID = 0.005  # sky130 / KLayout precheck manufacturing grid
 
-# ~65% of 2x2 die, same proportions as negative-nature01 (104x68 on 1x1 @ [50,15])
-MACRO_W = 215.0
-MACRO_H = 140.0
+# Right VPWR/VGND in LEF track ~macro_top+10um; need top >= ~206um for precheck (die 225.76um)
+MACRO_W = 252.0
+MACRO_H = 196.0
 
 MAX_DEPTH = 18
 MARGIN = GAP
