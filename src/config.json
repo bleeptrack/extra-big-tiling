@@ -3,7 +3,7 @@
       "my_logo": {
         "instances": {
           "logo": {
-            "location": [17, 13],
+            "location": [20, 13],
             "orientation": "N"
           }
         },
@@ -35,6 +35,13 @@
   "//": "PL_TARGET_DENSITY_PCT - You can increase this if Global Placement fails with error GPL-0302.",
   "//": "Users have reported that values up to 80 worked well for them.",
   "PL_TARGET_DENSITY_PCT": 60,
+
+  "//": "Margin strips need tap cells (decap-only columns fail nwell.4 / LU.2 / LU.3 DRC)",
+  "ENDCAP_CELL": "sky130_fd_sc_hd__tapvpwrvgnd_1",
+  "FP_ENDCAP_CELL": "sky130_fd_sc_hd__tapvpwrvgnd_1",
+  "FP_TAPCELL_DIST": 10,
+  "FP_TAP_HORIZONTAL_HALO": 4,
+  "FP_TAP_VERTICAL_HALO": 4,
 
   "//": "CLOCK_PERIOD - Increase this in case you are getting setup time violations.",
   "//": "The value is in nanoseconds, so 20ns == 50MHz.",
@@ -68,8 +75,8 @@
   "//": "Reduce wasted space",
   "TOP_MARGIN_MULT": 1,
   "BOTTOM_MARGIN_MULT": 1,
-  "LEFT_MARGIN_MULT": 6,
-  "RIGHT_MARGIN_MULT": 6,
+  "LEFT_MARGIN_MULT": 1,
+  "RIGHT_MARGIN_MULT": 1,
 
   "//": "Absolute die size",
   "FP_SIZING": "absolute",
