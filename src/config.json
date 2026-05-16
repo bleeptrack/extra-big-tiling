@@ -102,6 +102,6 @@
   "//": "MAGIC_DEF_LABELS may cause issues with LVS",
   "MAGIC_DEF_LABELS": 0,
 
-  "//": "pinonly can merge VPWR/VGND rects and fail precheck pin dimensions",
-  "MAGIC_WRITE_LEF_PINONLY": 0
+  "//": "Must stay 1: signal pins must be one met4 rect each (matches template DEF). 0 exports routing → ~40 LEF errors.",
+  "MAGIC_WRITE_LEF_PINONLY": 1
 }
