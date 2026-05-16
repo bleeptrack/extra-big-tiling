@@ -1,0 +1,15 @@
+# LEF file generated for my_logo
+VERSION 5.8 ;
+NAMESCASESENSITIVE ON ;
+DIVIDERCHAR "/" ;
+BUSBITCHARS "[]" ;
+UNITS
+   DATABASE MICRONS 1000 ;
+END UNITS
+
+MACRO my_logo
+   CLASS BLOCK ;
+   FOREIGN my_logo 0 0 ;
+   SIZE 300.000 BY 190.000 ;
+   SYMMETRY X Y ;
+END my_logo
