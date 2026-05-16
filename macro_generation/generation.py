@@ -11,9 +11,9 @@ MIN_SPACING = 1.7
 GAP = MIN_SPACING
 GRID = 0.005  # sky130 / KLayout precheck manufacturing grid
 
-# 2x2 die ~335 x 226 µm; smaller macro + logo at [7,13] leaves east core for margin power rails
-MACRO_W = 275.0
-MACRO_H = 180.0
+# ~65% of 2x2 die, same proportions as negative-nature01 (104x68 on 1x1 @ [50,15])
+MACRO_W = 215.0
+MACRO_H = 140.0
 
 MAX_DEPTH = 18
 MARGIN = GAP
