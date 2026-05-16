@@ -3,7 +3,6 @@
       "my_logo": {
         "instances": {
           "logo": {
-            "//": "Keep east core strip wide: macro flush to right (x~317) shortens right VPWR/VGND in LEF",
             "location": [7, 13],
             "orientation": "N"
           }
@@ -17,8 +16,6 @@
     ],
     "ERROR_ON_DISCONNECTED_PINS": false,
     "ERROR_ON_PDN_VIOLATIONS": false,
-    "//": "RUN_PDN does not extend met4 margin rails when RT_MAX_LAYER is met4; left macro east edge clear instead",
-    "RUN_PDN": false,
     "RUN_LVS": false,
 
 
