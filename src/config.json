@@ -16,7 +16,8 @@
     ],
     "ERROR_ON_DISCONNECTED_PINS": false,
     "ERROR_ON_PDN_VIOLATIONS": false,
-    "RUN_PDN": false,
+    "//": "PDN needed: without it right-margin VPWR/VGND straps stop ~13um below die top (pin check)",
+    "RUN_PDN": true,
     "RUN_LVS": false,
 
 
