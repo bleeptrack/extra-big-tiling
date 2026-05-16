@@ -11,9 +11,9 @@ MIN_SPACING = 1.7
 GAP = MIN_SPACING
 GRID = 0.005  # sky130 / KLayout precheck manufacturing grid
 
-# Usable art area for a 2x2 Tiny Tapeout tile (~334 x 216 µm die, with margin)
-MACRO_W = 300.0
-MACRO_H = 190.0
+# 2x2 die ~335 x 226 µm; smaller macro + logo at [7,13] leaves east core for margin power rails
+MACRO_W = 275.0
+MACRO_H = 180.0
 
 MAX_DEPTH = 18
 MARGIN = GAP

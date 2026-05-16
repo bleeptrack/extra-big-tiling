@@ -3,7 +3,8 @@
       "my_logo": {
         "instances": {
           "logo": {
-            "location": [17, 13],
+            "//": "Keep east core strip wide: macro flush to right (x~317) shortens right VPWR/VGND in LEF",
+            "location": [7, 13],
             "orientation": "N"
           }
         },
@@ -16,8 +17,8 @@
     ],
     "ERROR_ON_DISCONNECTED_PINS": false,
     "ERROR_ON_PDN_VIOLATIONS": false,
-    "//": "PDN needed: without it right-margin VPWR/VGND straps stop ~13um below die top (pin check)",
-    "RUN_PDN": true,
+    "//": "RUN_PDN does not extend met4 margin rails when RT_MAX_LAYER is met4; left macro east edge clear instead",
+    "RUN_PDN": false,
     "RUN_LVS": false,
 
 

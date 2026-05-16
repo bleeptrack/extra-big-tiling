@@ -10,6 +10,6 @@ END UNITS
 MACRO my_logo
    CLASS BLOCK ;
    FOREIGN my_logo 0 0 ;
-   SIZE 300.000 BY 190.000 ;
+   SIZE 275.000 BY 180.000 ;
    SYMMETRY X Y ;
 END my_logo
