@@ -15,8 +15,13 @@ GRID = 0.005  # sky130 / KLayout precheck manufacturing grid
 MACRO_W = 252.0
 MACRO_H = 196.0
 
-MAX_DEPTH = 18
+MAX_DEPTH = 32
 MARGIN = GAP
+# Regions smaller than this use tight packing (larger fraction of remaining space)
+SMALL_REGION = 8 * MIN_WIDTH
+GRID_FILL_STEP = MIN_WIDTH + GAP
+# 0–1: extra min-size tiles in gaps after recursive pass (1 = maximum density)
+GRID_FILL_DENSITY = 0.72
 
 
 def snap_coord(value):
@@ -40,16 +45,21 @@ def region_usable(w, h):
     return w >= MIN_WIDTH + 2 * MARGIN and h >= MIN_WIDTH + 2 * MARGIN
 
 
-def size_fractions(depth):
-    """Largest rects stay a modest fraction of their region (not the whole canvas)."""
-    max_frac_by_depth = (0.16, 0.20, 0.26, 0.32, 0.38)
-    min_frac_by_depth = (0.06, 0.08, 0.10, 0.12, 0.14)
+def size_fractions(depth, inner_w, inner_h):
+    """Smaller fractions at shallow depth → more rects; tight pack in tiny regions."""
+    if inner_w < SMALL_REGION or inner_h < SMALL_REGION:
+        return 0.30, 0.92
+
+    max_frac_by_depth = (0.08, 0.10, 0.12, 0.14, 0.17, 0.20, 0.24)
+    min_frac_by_depth = (0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09)
     i = min(depth, len(max_frac_by_depth) - 1)
     return min_frac_by_depth[i], max_frac_by_depth[i]
 
 
-def place_probability(depth):
-    return max(0.5, 0.95 - depth * 0.04)
+def place_probability(depth, inner_w, inner_h):
+    if inner_w < SMALL_REGION or inner_h < SMALL_REGION:
+        return 1.0
+    return max(0.92, 0.99 - depth * 0.004)
 
 
 def l_split_free_regions(rx, ry, rw, rh, px, py, pw, ph):
@@ -79,14 +89,14 @@ def l_split_free_regions(rx, ry, rw, rh, px, py, pw, ph):
 
 def split_region_without_placing(rx, ry, rw, rh):
     """Guillotine split when we skip placement but still want finer regions."""
-    if rw >= rh and rw > 4 * MIN_WIDTH:
-        split = snap_size(rw * random.uniform(0.38, 0.62))
+    if rw >= rh and rw > 3 * MIN_WIDTH:
+        split = snap_size(rw * random.uniform(0.32, 0.68))
         return [
             (rx, ry, split, rh),
             (rx + split + GAP, ry, rw - split - GAP, rh),
         ]
-    if rh > 4 * MIN_WIDTH:
-        split = snap_size(rh * random.uniform(0.38, 0.62))
+    if rh > 3 * MIN_WIDTH:
+        split = snap_size(rh * random.uniform(0.32, 0.68))
         return [
             (rx, ry, rw, split),
             (rx, ry + split + GAP, rw, rh - split - GAP),
@@ -101,8 +111,8 @@ def fill_region(rx, ry, rw, rh, depth, rectangles):
     inner_w = rw - 2 * MARGIN
     inner_h = rh - 2 * MARGIN
 
-    if random.random() < place_probability(depth):
-        min_frac, max_frac = size_fractions(depth)
+    if random.random() < place_probability(depth, inner_w, inner_h):
+        min_frac, max_frac = size_fractions(depth, inner_w, inner_h)
         pw = snap_size(random.uniform(min_frac, max_frac) * inner_w)
         ph = snap_size(random.uniform(min_frac, max_frac) * inner_h)
         pw = min(pw, inner_w)
@@ -123,9 +133,33 @@ def fill_region(rx, ry, rw, rh, depth, rectangles):
         fill_region(*region, depth + 1, rectangles)
 
 
+def overlaps_existing(x, y, w, h, rectangles):
+    for rx, ry, rw, rh in rectangles:
+        if x < rx + rw + GAP and rx < x + w + GAP and y < ry + rh + GAP and ry < y + h + GAP:
+            return True
+    return False
+
+
+def grid_fill_gaps(rectangles):
+    """Pack minimum-size rects into gaps left by the recursive layout."""
+    x = MARGIN
+    while x + MIN_WIDTH <= MACRO_W - MARGIN:
+        y = MARGIN
+        while y + MIN_WIDTH <= MACRO_H - MARGIN:
+            w = h = MIN_WIDTH
+            if random.random() < GRID_FILL_DENSITY and not overlaps_existing(
+                x, y, w, h, rectangles
+            ):
+                px, py, pw, ph = snap_rect(x, y, w, h)
+                rectangles.append((px, py, pw, ph))
+            y += GRID_FILL_STEP
+        x += GRID_FILL_STEP
+
+
 def generate_pattern():
     rectangles = []
     fill_region(0, 0, MACRO_W, MACRO_H, 0, rectangles)
+    grid_fill_gaps(rectangles)
     return rectangles
 
 
