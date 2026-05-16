@@ -3,7 +3,7 @@
       "my_logo": {
         "instances": {
           "logo": {
-            "location": [20, 13],
+            "location": [17, 13],
             "orientation": "N"
           }
         },
@@ -75,8 +75,8 @@
   "//": "Reduce wasted space",
   "TOP_MARGIN_MULT": 1,
   "BOTTOM_MARGIN_MULT": 1,
-  "LEFT_MARGIN_MULT": 1,
-  "RIGHT_MARGIN_MULT": 1,
+  "LEFT_MARGIN_MULT": 6,
+  "RIGHT_MARGIN_MULT": 6,
 
   "//": "Absolute die size",
   "FP_SIZING": "absolute",

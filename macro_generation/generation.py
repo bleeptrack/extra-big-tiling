@@ -9,6 +9,7 @@ METAL_DATATYPE = 20
 MIN_WIDTH = 1.7
 MIN_SPACING = 1.7
 GAP = MIN_SPACING
+GRID = 0.005  # sky130 / KLayout precheck manufacturing grid
 
 # Usable art area for a 2x2 Tiny Tapeout tile (~334 x 216 µm die, with margin)
 MACRO_W = 300.0
@@ -18,9 +19,21 @@ MAX_DEPTH = 18
 MARGIN = GAP
 
 
-def snap(value):
+def snap_coord(value):
+    return round(value / GRID) * GRID
+
+
+def snap_size(value):
     step = MIN_WIDTH
     return max(MIN_WIDTH, round(value / step) * step)
+
+
+def snap_rect(x, y, w, h):
+    x = snap_coord(x)
+    y = snap_coord(y)
+    w = snap_size(w)
+    h = snap_size(h)
+    return x, y, w, h
 
 
 def region_usable(w, h):
@@ -67,13 +80,13 @@ def l_split_free_regions(rx, ry, rw, rh, px, py, pw, ph):
 def split_region_without_placing(rx, ry, rw, rh):
     """Guillotine split when we skip placement but still want finer regions."""
     if rw >= rh and rw > 4 * MIN_WIDTH:
-        split = snap(rw * random.uniform(0.38, 0.62))
+        split = snap_size(rw * random.uniform(0.38, 0.62))
         return [
             (rx, ry, split, rh),
             (rx + split + GAP, ry, rw - split - GAP, rh),
         ]
     if rh > 4 * MIN_WIDTH:
-        split = snap(rh * random.uniform(0.38, 0.62))
+        split = snap_size(rh * random.uniform(0.38, 0.62))
         return [
             (rx, ry, rw, split),
             (rx, ry + split + GAP, rw, rh - split - GAP),
@@ -90,13 +103,14 @@ def fill_region(rx, ry, rw, rh, depth, rectangles):
 
     if random.random() < place_probability(depth):
         min_frac, max_frac = size_fractions(depth)
-        pw = snap(random.uniform(min_frac, max_frac) * inner_w)
-        ph = snap(random.uniform(min_frac, max_frac) * inner_h)
+        pw = snap_size(random.uniform(min_frac, max_frac) * inner_w)
+        ph = snap_size(random.uniform(min_frac, max_frac) * inner_h)
         pw = min(pw, inner_w)
         ph = min(ph, inner_h)
 
         px = rx + MARGIN + random.uniform(0, inner_w - pw)
         py = ry + MARGIN + random.uniform(0, inner_h - ph)
+        px, py, pw, ph = snap_rect(px, py, pw, ph)
 
         rectangles.append((px, py, pw, ph))
 
